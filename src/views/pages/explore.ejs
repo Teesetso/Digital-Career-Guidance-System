@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore Courses - DCGS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --background: #ffffff;
+            --foreground: #0f172a;
+            --card: #ffffff;
+            --muted: #f1f5f9;
+            --muted-foreground: #64748b;
+            --border: #e2e8f0;
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-foreground: #ffffff;
+            --success: #10b981;
+            --success-light: #d1fae5;
+            --warning: #f59e0b;
+            --warning-light: #fef3c7;
+            --danger: #ef4444;
+            --info: #3b82f6;
+            --info-light: #dbeafe;
+            --radius: 16px;
+            --shadow: 0 1px 3px 0 rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: var(--background);
+            color: var(--foreground);
+            line-height: 1.6;
+        }
+
+        /* ── TOP NAV ── */
+        .topnav {
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow);
+        }
+        .topnav-brand {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .topnav-links { display: flex; gap: 1rem; align-items: center; }
+        .topnav-links a {
+            text-decoration: none;
+            color: var(--muted-foreground);
+            font-size: 0.9rem;
+            font-weight: 500;
+            padding: 0.4rem 0.75rem;
+            border-radius: 8px;
+            transition: background 0.15s, color 0.15s;
+        }
+        .topnav-links a:hover, .topnav-links a.active {
+            background: var(--muted);
+            color: var(--primary);
+        }
+        .topnav-links .btn-upload {
+            background: var(--primary);
+            color: #fff;
+            padding: 0.5rem 1.25rem;
+            border-radius: 10px;
+        }
+        .topnav-links .btn-upload:hover { background: var(--primary-dark); color: #fff; }
+
+        /* ── LAYOUT ── */
+        .page-wrap {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* ── HERO BANNER ── */
+        .hero {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a78bfa 100%);
+            border-radius: var(--radius);
+            padding: 3rem 2.5rem;
+            margin-bottom: 2rem;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::after {
+            content: '🎓';
+            position: absolute;
+            right: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 6rem;
+            opacity: 0.15;
+        }
+        .hero h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .hero p { font-size: 1rem; opacity: 0.9; max-width: 520px; }
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: #fff;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.25rem 0.75rem;
+            border-radius: 99px;
+            margin-bottom: 0.75rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        /* ── UPLOAD CTA (learner only) ── */
+        .upload-cta {
+            background: var(--info-light);
+            border: 1px solid #bfdbfe;
+            border-radius: var(--radius);
+            padding: 1.25rem 1.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        .upload-cta p { color: #1e40af; font-weight: 500; font-size: 0.95rem; }
+        .upload-cta p span { display: block; font-weight: 400; font-size: 0.85rem; color: #3b82f6; margin-top: 0.2rem; }
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 0.65rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            white-space: nowrap;
+            transition: background 0.15s, transform 0.1s;
+        }
+        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); }
+
+        /* ── FILTERS ── */
+        .filters-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            align-items: center;
+            margin-bottom: 1.75rem;
+        }
+        .search-box {
+            flex: 1;
+            min-width: 200px;
+            position: relative;
+        }
+        .search-box input {
+            width: 100%;
+            padding: 0.65rem 1rem 0.65rem 2.5rem;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            background: var(--muted);
+            color: var(--foreground);
+            outline: none;
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+        .search-box input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(99,102,241,0.1); background: #fff; }
+        .search-icon { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--muted-foreground); font-size: 0.9rem; }
+        select.filter-select {
+            padding: 0.65rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 0.875rem;
+            font-family: inherit;
+            background: var(--muted);
+            color: var(--foreground);
+            outline: none;
+            cursor: pointer;
+            transition: border-color 0.15s;
+        }
+        select.filter-select:focus { border-color: var(--primary); }
+        .filter-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .chip {
+            padding: 0.35rem 0.9rem;
+            border-radius: 99px;
+            border: 1px solid var(--border);
+            background: var(--muted);
+            color: var(--muted-foreground);
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .chip:hover, .chip.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+        /* ── RESULTS COUNT ── */
+        .results-meta {
+            font-size: 0.875rem;
+            color: var(--muted-foreground);
+            margin-bottom: 1rem;
+        }
+        .results-meta strong { color: var(--foreground); }
+
+        /* ── UNIVERSITY SECTIONS ── */
+        .uni-section { margin-bottom: 2.5rem; }
+        .uni-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--border);
+        }
+        .uni-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--primary), #8b5cf6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+        .uni-name { font-size: 1.1rem; font-weight: 700; color: var(--foreground); }
+        .uni-location { font-size: 0.8rem; color: var(--muted-foreground); }
+        .uni-badge {
+            margin-left: auto;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--muted-foreground);
+            background: var(--muted);
+            padding: 0.25rem 0.65rem;
+            border-radius: 99px;
+        }
+
+        /* ── COURSE CARDS GRID ── */
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.25rem;
+        }
+        .course-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        .course-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); border-color: var(--primary); }
+        .course-card.recommended { border-color: var(--success); }
+        .recommended-ribbon {
+            position: absolute;
+            top: 0.75rem;
+            right: -0.5rem;
+            background: var(--success);
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 0.2rem 1rem 0.2rem 0.75rem;
+            border-radius: 4px 0 0 4px;
+            letter-spacing: 0.04em;
+        }
+        .course-faculty {
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--primary);
+            margin-bottom: 0.4rem;
+        }
+        .course-name {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--foreground);
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+        }
+        .course-duration {
+            font-size: 0.8rem;
+            color: var(--muted-foreground);
+            margin-bottom: 0.85rem;
+        }
+        .course-requirements {
+            background: var(--muted);
+            border-radius: 8px;
+            padding: 0.65rem 0.85rem;
+            margin-bottom: 1rem;
+        }
+        .course-requirements p { font-size: 0.78rem; color: var(--muted-foreground); margin-bottom: 0.2rem; font-weight: 500; }
+        .course-requirements ul { padding-left: 1rem; }
+        .course-requirements li { font-size: 0.78rem; color: var(--foreground); }
+        .course-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem; }
+        .tag {
+            font-size: 0.72rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 99px;
+            font-weight: 500;
+        }
+        .tag-science { background: #dbeafe; color: #1d4ed8; }
+        .tag-arts    { background: #fce7f3; color: #be185d; }
+        .tag-commerce{ background: #fef3c7; color: #92400e; }
+        .tag-health  { background: #d1fae5; color: #065f46; }
+        .tag-tech    { background: #ede9fe; color: #5b21b6; }
+        .tag-law     { background: #fee2e2; color: #b91c1c; }
+        .tag-edu     { background: #f0fdf4; color: #15803d; }
+        .card-footer { display: flex; justify-content: space-between; align-items: center; }
+        .aps-badge {
+            font-size: 0.78rem;
+            font-weight: 700;
+            padding: 0.3rem 0.7rem;
+            border-radius: 8px;
+            background: var(--muted);
+            color: var(--muted-foreground);
+        }
+        .aps-badge.met { background: var(--success-light); color: #065f46; }
+        .btn-details {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--primary);
+            text-decoration: none;
+            padding: 0.35rem 0.75rem;
+            border-radius: 8px;
+            border: 1px solid var(--primary);
+            transition: background 0.15s, color 0.15s;
+        }
+        .btn-details:hover { background: var(--primary); color: #fff; }
+
+        /* ── EMPTY STATE ── */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--muted-foreground);
+        }
+        .empty-state .icon { font-size: 3rem; margin-bottom: 1rem; }
+        .empty-state h3 { font-size: 1.25rem; font-weight: 600; color: var(--foreground); margin-bottom: 0.5rem; }
+
+        /* ── ADMIN BANNER ── */
+        .admin-bar {
+            background: linear-gradient(90deg, #0f172a, #1e293b);
+            color: #fff;
+            padding: 0.75rem 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.85rem;
+        }
+        .admin-bar span { opacity: 0.7; }
+        .admin-bar a { color: #a5b4fc; text-decoration: none; font-weight: 600; }
+        .admin-bar a:hover { color: #c7d2fe; }
+
+        @media (max-width: 768px) {
+            .page-wrap { padding: 1rem; }
+            .hero { padding: 2rem 1.5rem; }
+            .hero::after { display: none; }
+            .filters-bar { flex-direction: column; align-items: stretch; }
+            .search-box { min-width: unset; }
+            .upload-cta { flex-direction: column; align-items: flex-start; }
+            .courses-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Admin-only top bar -->
+<% if (user && user.role === 'admin') { %>
+<div class="admin-bar">
+    <span>🛡️ Admin Mode</span>
+    <a href="/admin/courses">Manage Courses</a>
+    <a href="/admin/dashboard">← Back to Dashboard</a>
+</div>
+<% } %>
+
+<!-- Top Navigation -->
+<nav class="topnav">
+    <a href="/" class="topnav-brand">DCGS</a>
+    <div class="topnav-links">
+        <a href="/dashboard">Dashboard</a>
+        <a href="/explore/courses" class="active">Explore</a>
+        <% if (user && user.role === 'admin') { %>
+            <a href="/admin/dashboard">Admin</a>
+        <% } %>
+        <a href="/upload-results" class="btn">Upload My Results</a>
+    </div>
+</nav>
+
+<div class="page-wrap">
+
+    <!-- Hero -->
+    <div class="hero">
+        <div class="hero-badge">🇿🇦 All 26 SA Public Universities</div>
+        <h1>Explore Courses & Programmes</h1>
+        <p>Browse courses across South Africa's universities. Upload your Grade 11 or 12 results to get AI-powered personalised recommendations.</p>
+    </div>
+
+    <!-- Upload CTA for learners -->
+    <% if (!user || user.role !== 'admin') { %>
+    <div class="upload-cta">
+        <p>
+            Want to know which courses you qualify for?
+            <span>Our AI analyses your results and matches you to the right programmes instantly.</span>
+        </p>
+        <a href="/upload-results" class="btn-primary">📄 Upload My Results</a>
+    </div>
+    <% } %>
+
+    <!-- Filters -->
+    <div class="filters-bar">
+        <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="searchInput" placeholder="Search courses, universities, faculties…" />
+        </div>
+        <select class="filter-select" id="universityFilter">
+            <option value="">All Universities</option>
+            <option value="UCT">UCT – Cape Town</option>
+            <option value="Wits">Wits – Witwatersrand</option>
+            <option value="UP">UP – Pretoria</option>
+            <option value="SU">SU – Stellenbosch</option>
+            <option value="UJ">UJ – Johannesburg</option>
+            <option value="UKZN">UKZN – KwaZulu-Natal</option>
+            <option value="NWU">NWU – North-West</option>
+            <option value="UFS">UFS – Free State</option>
+            <option value="RU">RU – Rhodes</option>
+            <option value="UFH">UFH – Fort Hare</option>
+            <option value="UNISA">UNISA – Distance Learning</option>
+            <option value="UWC">UWC – Western Cape</option>
+            <option value="UNIZULU">UniZulu – Zululand</option>
+            <option value="WSU">WSU – Walter Sisulu</option>
+            <option value="SMU">SMU – Sefako Makgatho</option>
+            <option value="UL">UL – Limpopo</option>
+            <option value="UNIVEN">Univen – Venda</option>
+            <option value="MUT">MUT – Mangosuthu</option>
+            <option value="TUT">TUT – Tshwane</option>
+            <option value="VUT">VUT – Vaal</option>
+            <option value="CUT">CUT – Central</option>
+            <option value="DUT">DUT – Durban</option>
+            <option value="CPUT">CPUT – Cape Peninsula</option>
+            <option value="NMU">NMU – Nelson Mandela</option>
+            <option value="SPU">SPU – Sol Plaatje</option>
+            <option value="UMP">UMP – Mpumalanga</option>
+        </select>
+        <select class="filter-select" id="facultyFilter">
+            <option value="">All Faculties</option>
+            <option value="Science">Science & Technology</option>
+            <option value="Commerce">Commerce & Business</option>
+            <option value="Arts">Arts & Humanities</option>
+            <option value="Health">Health Sciences</option>
+            <option value="Law">Law</option>
+            <option value="Education">Education</option>
+            <option value="Engineering">Engineering</option>
+        </select>
+        <div class="filter-chips">
+            <span class="chip active" data-filter="all">All</span>
+            <span class="chip" data-filter="recommended">⭐ Recommended</span>
+            <span class="chip" data-filter="popular">🔥 Popular</span>
+        </div>
+    </div>
+
+    <div class="results-meta">
+        Showing <strong id="visibleCount">0</strong> courses across <strong id="visibleUnis">0</strong> universities
+    </div>
+
+    <!-- Dynamic course listing -->
+    <div id="courseListings">
+        <!-- Rendered by JS from the universities data below -->
+    </div>
+
+    <div class="empty-state" id="emptyState" style="display:none;">
+        <div class="icon">🔎</div>
+        <h3>No courses found</h3>
+        <p>Try adjusting your search or filters.</p>
+    </div>
+
+</div>
+
+<script>
+// ─────────────────────────────────────────────
+// SOUTH AFRICAN UNIVERSITIES & COURSES DATA
+// Replace / extend with your database calls
+// ─────────────────────────────────────────────
+const universities = [
+  {
+    id: "UCT",
+    name: "University of Cape Town",
+    location: "Cape Town, Western Cape",
+    courses: [
+      { name: "BSc Computer Science", faculty: "Science", duration: "3 years", aps: 42, tags: ["tech", "science"], requirements: ["Maths: 70%+", "Physical Science: 60%+", "English: 60%+"] },
+      { name: "Bachelor of Medicine (MBChB)", faculty: "Health", duration: "6 years", aps: 45, tags: ["health"], requirements: ["Maths: 70%+", "Physical Science: 70%+", "Life Science: 70%+"] },
+      { name: "BCom Accounting", faculty: "Commerce", duration: "3 years", aps: 40, tags: ["commerce"], requirements: ["Maths: 65%+", "English: 60%+"] },
+      { name: "LLB Law", faculty: "Law", duration: "4 years", aps: 38, tags: ["law"], requirements: ["English: 65%+", "Any 3 subjects: 60%+"] },
+      { name: "BSc Electrical Engineering", faculty: "Engineering", duration: "4 years", aps: 42, tags: ["tech", "science"], requirements: ["Maths: 70%+", "Physical Science: 65%+"] },
+      { name: "BA Political Science", faculty: "Arts", duration: "3 years", aps: 34, tags: ["arts"], requirements: ["English: 65%+", "Any 3 subjects: 55%+"] },
+      { name: "BSc Actuarial Science", faculty: "Science", duration: "3 years", aps: 44, tags: ["science", "commerce"], requirements: ["Maths: 80%+", "English: 60%+"] },
+      { name: "BPharm Pharmacy", faculty: "Health", duration: "4 years", aps: 38, tags: ["health", "science"], requirements: ["Maths: 65%+", "Physical Science: 60%+", "Life Science: 65%+"] },
+    ]
+  },
+  {
+    id: "Wits",
+    name: "University of the Witwatersrand",
+    location: "Johannesburg, Gauteng",
+    courses: [
+      { name: "BSc Engineering (Civil)", faculty: "Engineering", duration: "4 years", aps: 42, tags: ["tech", "science"], requirements: ["Maths: 70%+", "Physical Science: 60%+"] },
+      { name: "BCom Accounting", faculty: "Commerce", duration: "3 years", aps: 38, tags: ["commerce"], requirements: ["Maths: 60%+", "English: 55%+"] },
+      { name: "BA Humanities", faculty: "Arts", duration: "3 years", aps: 32, tags: ["arts"], requirements: ["English: 60%+", "Any 3 subjects: 50%+"] },
+      { name: "BSc Actuarial Science", faculty: "Science", duration: "3 years", aps: 44, tags: ["science", "commerce"], requirements: ["Maths: 80%+", "English: 60%+"] },
+      { name: "MBBCh Medicine", faculty: "Health", duration: "6 years", aps: 44, tags: ["health"], requirements: ["Maths: 70%+", "Physical Science: 65%+", "Life Science: 70%+"] },
+      { name: "LLB Law", faculty: "Law", duration: "4 years", aps: 36, tags: ["law"], requirements: ["English: 65%+", "Any 3 subjects: 55%+"] },
+      { name: "BSc Computer Science", faculty: "Science", duration: "3 years", aps: 40, tags: ["tech", "science"], requirements: ["Maths: 70%+", "Physical Science: 55%+"] },
+      { name: "BEd Education", faculty: "Education", duration: "4 years", aps: 26, tags: ["edu"], requirements: ["English: 55%+", "Any 3 subjects: 45%+"] },
+    ]
+  },
+  {
+    id: "UP",
+    name: "University of Pretoria",
+    location: "Pretoria, Gauteng",
+    courses: [
+      { name: "BEng Electrical Engineering", faculty: "Engineering", duration: "4 years", aps: 40, tags: ["tech", "science"], requirements: ["Maths: 70%+", "Physical Science: 60%+"] },
+      { name: "BVSc Veterinary Science", faculty: "Health", duration: "6 years", aps: 42, tags: ["health", "science"], requirements: ["Maths: 60%+", "Life Science: 70%+", "Physical Science: 60%+"] },
+      { name: "BCom Business Management", faculty: "Commerce", duration: "3 years", aps: 30, tags: ["commerce"], requirements: ["Maths: 50%+", "English: 50%+"] },
+      { name: "BEd Foundation Phase", faculty: "Education", duration: "4 years", aps: 26, tags: ["edu"], requirements: ["English: 50%+", "Any 3 subjects: 40%+"] },
+      { name: "LLB Law", faculty: "Law", duration: "4 years", aps: 32, tags: ["law"], requirements: ["English: 60%+", "Any 3 subjects: 55%+"] },
+      { name: "BSc Computer Science", faculty: "Science", duration: "3 years", aps: 34, tags: ["tech", "science"], requirements: ["Maths: 65%+", "Physical Science: 55%+"] },
+      { name: "MBChB Medicine", faculty: "Health", duration: "6 years", aps: 42, tags: ["health"], requirements: ["Maths: 70%+", "Physical Science: 65%+", "Life Science: 70%+"] },
+      { name: "BSc Architecture", faculty: "Engineering", duration: "3 years", aps: 32, tags: ["tech", "arts"], requirements: ["Maths: 60%+", "Physical Science: 50%+", "English: 55%+"] },
+    ]
+  },
+  {
+    id: "SU",
+    name: "Stellenbosch University",
+    location: "Stellenbosch, Western Cape",
+    courses: [
+      { name: "BScAgric Agriculture", faculty: "Science", duration: "4 years", aps: 30, tags: ["science"], requirements: ["Maths: 50%+", "Physical Science or Life Science: 50%+"] },
+      { name: "BCom Financial Management", faculty: "Commerce", duration: "3 years", aps: 36, tags: ["commerce"], requirements: ["Maths: 65%+", "English or Afrikaans: 55%+"] },
+      { name: "BA Social Work", faculty: "Arts", duration: "4 years", aps: 30, tags: ["arts"], requirements: ["English: 55%+", "Any 3 subjects: 50%+"] },
+      { name: "BEng Mechanical Engineering", faculty: "Engineering", duration: "4 years", aps: 40, tags: ["tech", "science"], requirements: ["Maths: 70%+", "Physical Science: 65%+"] },
+      { name: "MBChB Medicine", faculty: "Health", duration: "6 years", aps: 42, tags: ["health"], requirements: ["Maths: 70%+", "Physical Science: 65%+", "Life Science: 70%+"] },
+      { name: "LLB Law", faculty: "Law", duration: "4 years", aps: 36, tags: ["law"], requirements: ["English: 65%+", "Any 3 subjects: 55%+"] },
+      { name: "BSc Computer Science", faculty: "Science", duration: "3 years", aps: 38, tags: ["tech", "science"], requirements: ["Maths: 70%+", "Physical Science: 55%+"] },
+      { name: "BA Music", faculty: "Arts", duration: "3 years", aps: 28, tags: ["arts"], requirements: ["English or Afrikaans: 60%+", "Music audition required"] },
+    ]
+  },
+  {
+    id: "UJ",
+    name: "University of Johannesburg",
+    location: "Johannesburg, Gauteng",
+    courses: [
+      { name: "Diploma in Graphic Design", faculty: "Arts", duration: "3 years", aps: 24, tags: ["arts"], requirements: ["English: 50%+", "Any 3 subjects: 40%+"] },
+      { name: "BSc Information Technology", faculty: "Science", duration: "3 years", aps: 28, tags: ["tech"], requirements: ["Maths: 50%+", "English: 50%+"] },
+      { name: "BCom Accounting", faculty: "Commerce", duration: "3 years", aps: 28, tags: ["commerce"], requirements: ["Maths: 60%+", "English: 50%+"] },
+      { name: "BEd Senior Phase", faculty: "Education", duration: "4 years", aps: 24, tags: ["edu"], requirements: ["English: 50%+", "Any 3 subjects: 40%+"] },
+      { name: "LLB Law", faculty: "Law", duration: "4 years", aps: 28, tags: ["law"], requirements: ["English: 60%+", "Any 3 subjects: 50%+"] },
+      { name: "BEng Civil Engineering", faculty: "Engineering", duration: "4 years", aps: 34, tags: ["tech", "science"], requirements: ["Maths: 65%+", "Physical Science: 60%+"] },
+      { name: "BA Communication", faculty: "Arts", duration: "3 years", aps: 24, tags: ["arts"], requirements: ["English: 55%+", "Any 3 subjects: 40%+"] },
+    ]
+  },
+  {
+    id: "UKZN",
+    name: "University of KwaZulu-Natal",
+    location: "Durban, KwaZulu-Natal",
+    courses: [
+      { name: "BSc Agriculture", faculty: "Science", duration: "4 years", aps: 26, tags: ["science"], requirements: ["Maths or Maths Lit: 50%+", "Any 3 subjects: 40%+"] },
+      { name: "LLB Law", faculty: "Law", duration: "4 years", aps: 30, tags: ["law"], requirements: ["English: 60%+", "Any 3 subjects: 50%+"] },
+      { name: "BSc Nursing", faculty: "Health", duration: "4 years", aps: 28, tags: ["health"], requirements: ["Life Science: 50%+", "Maths: 40%+"] },
+      { name: "BCom Economics", faculty: "Commerce", duration: "3 years", aps: 28, tags: ["commerce"], requirements: ["Maths: 50%+", "English: 50%+"] },
+      { name: "MBChB Medicine", faculty: "Health", duration: "6 years", aps: 40, tags: ["health"], requirements: ["Maths: 70%+", "Physical Science: 65%+", "Life Science: 70%+"] },
+      { name: "BSc Computer Science", faculty: "Science", duration: "3 years", aps: 30, tags: ["tech", "science"], requirements: ["Maths: 60%+", "English: 50%+"] },
+      { name: "BA Education", faculty: "Education", duration: "4 years", aps: 24, tags: ["edu"], requirements: ["English: 55%+", "Any 3 subjects: 40%+"] },
+    ]
+  },
+  {
+    id: "NWU",
+    name: "North-West University",
+    location: "Mahikeng / Potchefstroom / Vanderbijlpark",
+    courses: [
+      { name: "BSc Pharmacy", faculty: "Health", duration: "4 years", aps: 30, tags: ["health", "science"], requirements: ["Maths: 60%+", "Physical Science: 60%+", "Life Science: 60%+"] },
+      { name: "BA Communication", faculty: "Arts", duration: "3 years", aps: 24, tags: ["arts"], requirements: ["English: 55%+", "Any 3 subjects: 40%+"] },
+      { name: "BEng Chemical Engineering", faculty: "Engineering", duration: "4 years", aps: 36, tags: ["tech", "science"], requirements: ["Maths: 65%+", "Physical Science: 60%+"] },
+      { name: "BCom Accountancy", faculty: "Commerce", duration: "3 years", aps: 28, tags: ["commerce"], requirements: ["Maths: 60%+", "English: 50%+"] },
+      { name: "LLB Law", faculty: "Law", duration: "4 years", aps: 28, tags: ["law"], requirements: ["English: 60%+", "Any 3 subjects: 50%+"] },
+      { name: "BEd Foundation Phase", faculty: "Education", duration: "4 years", aps: 24, tags: ["edu"], requirements: ["English: 50%+", "Any 3 subjects: 40%+"] },
+      { name: "BSc Information Technology", faculty: "Science", duration: "3 years", aps: 26, tags: ["tech"], requirements: ["Maths: 55%+", "English: 50%+"] },
+    ]
+  },
+  {
+    id: "UFS",
+    name: "University of the Free State",
+    location: "Bloemfontein, Free State",
+    courses: [
+      { name: "MBChB Medicine", faculty: "Health", duration: "6 years", aps: 40, tags: ["health"], requirements: ["Maths: 70%+", "Physical Science: 65%+", "Life Science: 70%+"] },
+      { name: "BSocSc Sociology", faculty: "Arts", duration: "3 years", aps: 24, tags: ["arts"], requirements: ["English: 50%+", "Any 3 subjects: 40%+"] },
+      { name: "BCom Accountancy", faculty: "Commerce", duration: "3 years", aps: 30, tags: ["commerce"], requirements: ["Maths: 60%+", "English: 50%+"] },
+      { name: "LLB Law", faculty: "Law", duration: "4 years", aps: 30, tags: ["law"], requirements: ["English: 60%+", "Any 3 subjects: 50%+"] },
+      { name: "BEng Civil Engineering", faculty: "Engineering", duration: "4 years", aps: 34, tags: ["tech", "science"], requirements: ["Maths: 65%+", "Physical Science: 60%+"] },
+      { name: "BEd Senior Phase", faculty: "Education", duration: "4 years", aps: 24, tags: ["edu"], requirements: ["English: 50%+", "Any 3 subjects: 40%+"] },
+      { name: "BSc Nursing", faculty: "Health", duration: "4 years", aps: 26, tags: ["health"], requirements: ["Life Science: 55%+", "Maths or Maths Lit: 50%+"] },
+    ]
+  },
+  {
+    id: "RU",
+    name: "Rhodes University",
+    location: "Makhanda, Eastern Cape",
+    courses: [
+      { name: "BA Journalism & Media Studies", faculty: "Arts", duration: "3 years", aps: 28, tags: ["arts"], requirements: ["English: 65%+", "Any 3 subjects: 50%+"] },
+      { name: "BSc Environmental Science", faculty: "Science", duration: "3 years", aps: 26, tags: ["science"], requirements: ["Maths: 50%+", "Any Science: 50%+"] },
+      { name: "LLB Law", faculty: "Law", duration: "4 years", aps: 30, tags: ["law"], requirements: ["English: 60%+", "Any 3 subjects: 50%+"] },
+      { name: "BCom Accounting", faculty: "Commerce", duration: "3 years", aps: 28, tags: ["commerce"], requirements: ["Maths: 55%+", "English: 55%+"] },
+      { name: "BSc Computer Science", faculty: "Science", duration: "3 years", aps: 28, tags: ["tech", "science"], requirements: ["Maths: 60%+", "English: 50%+"] },
+      { name: "BA Psychology", faculty: "Arts", duration: "3 years", aps: 26, tags: ["arts"], requirements: ["English: 60%+", "Any 3 subjects: 50%+"] },
+      { name: "BEd Education", faculty: "Education", duration: "4 years", aps: 24, tags: ["edu"], requirements: ["English: 55%+", "Any 3 subjects: 40%+"] },
+    ]
+  },
+  {
+    id: "UFH",
+    name: "University of Fort Hare",
+    location: "Alice, Eastern Cape",
+    courses: [
+      { name: "BA Social Development", faculty: "Arts", duration: "3 years", aps: 22, tags: ["arts"], requirements: ["English: 40%+", "Any 3 subjects: 30%+"] },
+      { name: "BSc Computer Science", faculty: "Science", duration: "3 years", aps: 24, tags: ["tech", "science"], requirements: ["Maths: 50%+", "English: 40%+"] },
+      { name: "BCom Accounting", faculty: "Commerce", duration: "3 years", aps: 24, tags: ["commerce"], requirements: ["Maths: 50%+", "English: 40%+"] },
+      { name: "LLB Law", faculty: "Law", duration: "4 years", aps: 26, tags: ["law"], requirements: ["English: 55%+", "Any 3 subjects: 45%+"] },
+      { name: "BEd Foundation Phase", faculty: "Education", duration: "4 years", aps: 22, tags: ["edu"], requirements: ["English: 45%+", "Any 3 subjects: 35%+"] },
+      { name: "BSc Agriculture", faculty: "Science", duration: "4 years", aps: 22, tags: ["science"], requirements: ["Maths or Maths Lit: 40%+", "Life Science: 40%+"] },
+    ]
+  },
+  {
+    id: "UNISA",
+    name: "University of South Africa (UNISA)",
+    location: "Pretoria (Distance Learning) · Nationwide",
+    courses: [
+      { name: "BCom General", faculty: "Commerce", duration: "3 years (part-time)", aps: 0, tags: ["commerce"], requirements: ["Matric with endorsement"] },
+      { name: "BA Psychology", faculty: "Arts", duration: "3 years (part-time)", aps: 0, tags: ["arts"], requirements: ["Matric with endorsement"] },
+      { name: "LLB Law", faculty: "Law", duration: "4 years (part-time)", aps: 0, tags: ["law"], requirements: ["Matric with endorsement"] },
+      { name: "BEd Education", faculty: "Education", duration: "4 years (part-time)", aps: 0, tags: ["edu"], requirements: ["Matric with endorsement"] },
+      { name: "BCom Accounting", faculty: "Commerce", duration: "3 years (part-time)", aps: 0, tags: ["commerce"], requirements: ["Matric with endorsement"] },
+      { name: "BA Criminology", faculty: "Arts", duration: "3 years (part-time)", aps: 0, tags: ["arts", "law"], requirements: ["Matric with endorsement"] },
+      { name: "BSc Environmental Management", faculty: "Science", duration: "3 years (part-time)", aps: 0, tags: ["science"], requirements: ["Matric with endorsement"] },
+    ]
+  },
+  {
+    id: "UWC",
+    name: "University of the Western Cape",
+    location: "Bellville, Western Cape",
+    courses: [
+      { name: "BDS Dentistry", faculty: "Health", duration: "5 years", aps: 38, tags: ["health"], requirements: ["Maths: 65%+", "Physical Science: 60%+", "Life Science: 65%+"] },
+      { name: "LLB Law", faculty: "Law", duration: "4 years", aps: 30, tags: ["law"], requirements: ["English: 60%+", "Any 3 subjects: 50%+"] },
+      { name: "BCom Accounting", faculty: "Commerce", duration: "3 years", aps: 28, tags: ["commerce"], requirements: ["Maths: 55%+", "English: 50%+"] },
+      { name: "BSc Computer Science", faculty: "Science", duration: "3 years", aps: 28, tags: ["tech", "science"], requirements: ["Maths: 60%+", "English: 50%+"] },
+      { name: "BA Psychology", faculty: "Arts", duration: "3 years", aps: 26, tags: ["arts"], requirements: ["English: 55%+", "Any 3 subjects: 45%+"] },
+      { name: "BSc Nursing", faculty: "Health", duration: "4 years", aps: 26, tags: ["health"], requirements: ["Life Science: 55%+", "Maths: 45%+"] },
+      { name: "BPharm Pharmacy", faculty: "Health", duration: "4 years", aps: 34, tags: ["health", "science"], requirements: ["Maths: 60%+", "Physical Science: 55%+", "Life Science: 60%+"] },
+    ]
+  },
+  {
+    id: "UNIZULU",
+    name: "University of Zululand",
+    location: "KwaDlangezwa, KwaZulu-Natal",
+    courses: [
+      { name: "BCom Business Administration", faculty: "Commerce", duration: "3 years", aps: 22, tags: ["commerce"], requirements: ["Maths or Maths Lit: 40%+", "English: 40%+"] },
+      { name: "BA Psychology", faculty: "Arts", duration: "3 years", aps: 20, tags: ["arts"], requirements: ["English: 40%+", "Any 3 subjects: 30%+"] },
+      { name: "BSc Agriculture", faculty: "Science", duration: "4 years", aps: 22, tags: ["science"], requirements: ["Maths or Maths Lit: 40%+", "Life Science: 40%+"] },
+      { name: "BEd Foundation Phase", faculty: "Education", duration: "4 years", aps: 20, tags: ["edu"], requirements: ["English: 40%+", "Any 3 subjects: 30%+"] },
+      { name: "BSc Environmental Science", faculty: "Science", duration: "3 years", aps: 22, tags: ["science"], requirements: ["Maths: 45%+", "Life Science: 45%+"] },
+      { name: "BA Social Work", faculty: "Arts", duration: "4 years", aps: 20, tags: ["arts"], requirements: ["English: 40%+", "Any 3 subjects: 30%+"] },
+    ]
+  },
+  {
+    id: "WSU",
+    name: "Walter Sisulu University",
+    location: "Mthatha, Eastern Cape",
+    courses: [
+      { name: "MBChB Medicine", faculty: "Health", duration: "6 years", aps: 38, tags: ["health"], requirements: ["Maths: 65%+", "Physical Science: 60%+", "Life Science: 65%+"] },
+      { name: "BSc Nursing", faculty: "Health", duration: "4 years", aps: 26, tags: ["health"], requirements: ["Life Science: 50%+", "Maths: 40%+"] },
+      { name: "BCom Accounting", faculty: "Commerce", duration: "3 years", aps: 24, tags: ["commerce"], requirements: ["Maths: 50%+", "English: 45%+"] },
+      { name: "BEd Senior Phase", faculty: "Education", duration: "4 years", aps: 22, tags: ["edu"], requirements: ["English: 45%+", "Any 3 subjects: 35%+"] },
+      { name: "BA Social Work", faculty: "Arts", duration: "4 years", aps: 22, tags: ["arts"], requirements: ["English: 45%+", "Any 3 subjects: 35%+"] },
+      { name: "BEng Civil Engineering", faculty: "Engineering", duration: "4 years", aps: 30, tags: ["tech", "science"], requirements: ["Maths: 60%+", "Physical Science: 55%+"] },
+    ]
+  },
+  {
+    id: "SMU",
+    name: "Sefako Makgatho Health Sciences University",
+    location: "Ga-Rankuwa, Gauteng",
+    courses: [
+      { name: "MBChB Medicine", faculty: "Health", duration: "6 years", aps: 38, tags: ["health"], requirements: ["Maths: 65%+", "Physical Science: 60%+", "Life Science: 65%+"] },
+      { name: "BPharm Pharmacy", faculty: "Health", duration: "4 years", aps: 32, tags: ["health", "science"], requirements: ["Maths: 60%+", "Physical Science: 55%+", "Life Science: 60%+"] },
+      { name: "BSc Nursing", faculty: "Health", duration: "4 years", aps: 28, tags: ["health"], requirements: ["Life Science: 55%+", "Maths: 45%+"] },
+      { name: "BOH Oral Hygiene", faculty: "Health", duration: "3 years", aps: 26, tags: ["health"], requirements: ["Life Science: 50%+", "Maths: 40%+"] },
+      { name: "BPhysT Physiotherapy", faculty: "Health", duration: "4 years", aps: 30, tags: ["health"], requirements: ["Maths: 55%+", "Life Science: 60%+"] },
+      { name: "BOT Occupational Therapy", faculty: "Health", duration: "4 years", aps: 28, tags: ["health"], requirements: ["Life Science: 55%+", "Maths: 45%+"] },
+    ]
+  },
+  {
+    id: "UL",
+    name: "University of Limpopo",
+    location: "Polokwane, Limpopo",
+    courses: [
+      { name: "MBChB Medicine", faculty: "Health", duration: "6 years", aps: 36, tags: ["health"], requirements: ["Maths: 65%+", "Physical Science: 60%+", "Life Science: 65%+"] },
+      { name: "BPharm Pharmacy", faculty: "Health", duration: "4 years", aps: 30, tags: ["health", "science"], requirements: ["Maths: 55%+", "Physical Science: 55%+", "Life Science: 55%+"] },
+      { name: "BCom Accounting", faculty: "Commerce", duration: "3 years", aps: 24, tags: ["commerce"], requirements: ["Maths: 50%+", "English: 40%+"] },
+      { name: "LLB Law", faculty: "Law", duration: "4 years", aps: 26, tags: ["law"], requirements: ["English: 55%+", "Any 3 subjects: 45%+"] },
+      { name: "BA Social Work", faculty: "Arts", duration: "4 years", aps: 22, tags: ["arts"], requirements: ["English: 45%+", "Any 3 subjects: 35%+"] },
+      { name: "BEd Senior Phase", faculty: "Education", duration: "4 years", aps: 22, tags: ["edu"], requirements: ["English: 45%+", "Any 3 subjects: 35%+"] },
+      { name: "BSc Agriculture", faculty: "Science", duration: "4 years", aps: 22, tags: ["science"], requirements: ["Maths or Maths Lit: 45%+", "Life Science: 45%+"] },
+    ]
+  },
+  {
+    id: "UNIVEN",
+    name: "University of Venda",
+    location: "Thohoyandou, Limpopo",
+    courses: [
+      { name: "BSc Agriculture", faculty: "Science", duration: "4 years", aps: 20, tags: ["science"], requirements: ["Maths or Maths Lit: 40%+", "Life Science: 40%+"] },
+      { name: "BCom Accounting", faculty: "Commerce", duration: "3 years", aps: 22, tags: ["commerce"], requirements: ["Maths: 45%+", "English: 40%+"] },
+      { name: "LLB Law", faculty: "Law", duration: "4 years", aps: 24, tags: ["law"], requirements: ["English: 50%+", "Any 3 subjects: 40%+"] },
+      { name: "BEd Foundation Phase", faculty: "Education", duration: "4 years", aps: 20, tags: ["edu"], requirements: ["English: 40%+", "Any 3 subjects: 30%+"] },
+      { name: "BA Social Work", faculty: "Arts", duration: "4 years", aps: 20, tags: ["arts"], requirements: ["English: 40%+", "Any 3 subjects: 30%+"] },
+      { name: "BSc Environmental Science", faculty: "Science", duration: "3 years", aps: 22, tags: ["science"], requirements: ["Maths: 40%+", "Life Science: 40%+"] },
+      { name: "BA Music", faculty: "Arts", duration: "3 years", aps: 20, tags: ["arts"], requirements: ["English: 40%+", "Any 3 subjects: 30%+"] },
+    ]
+  },
+  {
+    id: "MUT",
+    name: "Mangosuthu University of Technology",
+    location: "Umlazi, KwaZulu-Natal",
+    courses: [
+      { name: "Diploma in Civil Engineering", faculty: "Engineering", duration: "3 years", aps: 20, tags: ["tech", "science"], requirements: ["Maths: 40%+", "Physical Science: 40%+"] },
+      { name: "Diploma in Electrical Engineering", faculty: "Engineering", duration: "3 years", aps: 20, tags: ["tech"], requirements: ["Maths: 40%+", "Physical Science: 40%+"] },
+      { name: "Diploma in Chemical Engineering", faculty: "Engineering", duration: "3 years", aps: 22, tags: ["tech", "science"], requirements: ["Maths: 45%+", "Physical Science: 45%+"] },
+      { name: "Diploma in Nature Conservation", faculty: "Science", duration: "3 years", aps: 18, tags: ["science"], requirements: ["Life Science: 40%+", "Any 3 subjects: 30%+"] },
+      { name: "Diploma in Business Administration", faculty: "Commerce", duration: "3 years", aps: 18, tags: ["commerce"], requirements: ["Maths or Maths Lit: 40%+", "English: 40%+"] },
+      { name: "Diploma in Nursing", faculty: "Health", duration: "3 years", aps: 20, tags: ["health"], requirements: ["Life Science: 45%+", "Maths or Maths Lit: 40%+"] },
+    ]
+  },
+  {
+    id: "TUT",
+    name: "Tshwane University of Technology",
+    location: "Pretoria, Gauteng",
+    courses: [
+      { name: "Diploma in Information Technology", faculty: "Science", duration: "3 years", aps: 22, tags: ["tech"], requirements: ["Maths: 40%+", "English: 40%+"] },
+      { name: "Diploma in Civil Engineering", faculty: "Engineering", duration: "3 years", aps: 22, tags: ["tech", "science"], requirements: ["Maths: 45%+", "Physical Science: 40%+"] },
+      { name: "Diploma in Journalism", faculty: "Arts", duration: "3 years", aps: 22, tags: ["arts"], requirements: ["English: 55%+", "Any 3 subjects: 40%+"] },
+      { name: "Diploma in Tourism Management", faculty: "Commerce", duration: "3 years", aps: 20, tags: ["commerce"], requirements: ["English: 50%+", "Any 3 subjects: 35%+"] },
+      { name: "Diploma in Nursing", faculty: "Health", duration: "3 years", aps: 22, tags: ["health"], requirements: ["Life Science: 45%+", "Maths or Maths Lit: 40%+"] },
+      { name: "BTech Electrical Engineering", faculty: "Engineering", duration: "1 year (post-diploma)", aps: 24, tags: ["tech", "science"], requirements: ["National Diploma in Electrical Engineering"] },
+      { name: "Diploma in Business Administration", faculty: "Commerce", duration: "3 years", aps: 20, tags: ["commerce"], requirements: ["Maths Lit: 40%+", "English: 45%+"] },
+    ]
+  },
+  {
+    id: "VUT",
+    name: "Vaal University of Technology",
+    location: "Vanderbijlpark, Gauteng",
+    courses: [
+      { name: "Diploma in Mechanical Engineering", faculty: "Engineering", duration: "3 years", aps: 20, tags: ["tech", "science"], requirements: ["Maths: 40%+", "Physical Science: 40%+"] },
+      { name: "Diploma in Information Technology", faculty: "Science", duration: "3 years", aps: 20, tags: ["tech"], requirements: ["Maths: 40%+", "English: 40%+"] },
+      { name: "Diploma in Accounting", faculty: "Commerce", duration: "3 years", aps: 20, tags: ["commerce"], requirements: ["Maths: 40%+", "English: 40%+"] },
+      { name: "Diploma in Tourism & Hospitality", faculty: "Commerce", duration: "3 years", aps: 18, tags: ["commerce"], requirements: ["English: 45%+", "Any 3 subjects: 35%+"] },
+      { name: "Diploma in Public Management", faculty: "Arts", duration: "3 years", aps: 18, tags: ["arts"], requirements: ["English: 40%+", "Any 3 subjects: 30%+"] },
+      { name: "Diploma in Chemical Engineering", faculty: "Engineering", duration: "3 years", aps: 22, tags: ["tech", "science"], requirements: ["Maths: 45%+", "Physical Science: 40%+"] },
+    ]
+  },
+  {
+    id: "CUT",
+    name: "Central University of Technology",
+    location: "Bloemfontein, Free State",
+    courses: [
+      { name: "Diploma in Electrical Engineering", faculty: "Engineering", duration: "3 years", aps: 20, tags: ["tech"], requirements: ["Maths: 40%+", "Physical Science: 40%+"] },
+      { name: "Diploma in Information Technology", faculty: "Science", duration: "3 years", aps: 20, tags: ["tech"], requirements: ["Maths: 40%+", "English: 40%+"] },
+      { name: "Diploma in Accounting", faculty: "Commerce", duration: "3 years", aps: 20, tags: ["commerce"], requirements: ["Maths: 40%+", "English: 40%+"] },
+      { name: "Diploma in Civil Engineering", faculty: "Engineering", duration: "3 years", aps: 20, tags: ["tech", "science"], requirements: ["Maths: 40%+", "Physical Science: 40%+"] },
+      { name: "Diploma in Fashion Design", faculty: "Arts", duration: "3 years", aps: 18, tags: ["arts"], requirements: ["English: 40%+", "Any 3 subjects: 30%+"] },
+      { name: "Diploma in Biomedical Technology", faculty: "Health", duration: "3 years", aps: 24, tags: ["health", "science"], requirements: ["Maths: 50%+", "Life Science: 50%+", "Physical Science: 45%+"] },
+    ]
+  },
+  {
+    id: "DUT",
+    name: "Durban University of Technology",
+    location: "Durban, KwaZulu-Natal",
+    courses: [
+      { name: "Diploma in Information Technology", faculty: "Science", duration: "3 years", aps: 22, tags: ["tech"], requirements: ["Maths: 40%+", "English: 45%+"] },
+      { name: "Diploma in Civil Engineering", faculty: "Engineering", duration: "3 years", aps: 22, tags: ["tech", "science"], requirements: ["Maths: 45%+", "Physical Science: 40%+"] },
+      { name: "Diploma in Nursing", faculty: "Health", duration: "3 years", aps: 24, tags: ["health"], requirements: ["Life Science: 50%+", "Maths or Maths Lit: 40%+"] },
+      { name: "Diploma in Business Administration", faculty: "Commerce", duration: "3 years", aps: 20, tags: ["commerce"], requirements: ["Maths Lit: 40%+", "English: 45%+"] },
+      { name: "Diploma in Fashion & Textile Design", faculty: "Arts", duration: "3 years", aps: 20, tags: ["arts"], requirements: ["English: 45%+", "Any 3 subjects: 35%+"] },
+      { name: "Diploma in Journalism", faculty: "Arts", duration: "3 years", aps: 22, tags: ["arts"], requirements: ["English: 55%+", "Any 3 subjects: 40%+"] },
+      { name: "BPharm Pharmacy", faculty: "Health", duration: "4 years", aps: 30, tags: ["health", "science"], requirements: ["Maths: 55%+", "Physical Science: 55%+", "Life Science: 55%+"] },
+    ]
+  },
+  {
+    id: "CPUT",
+    name: "Cape Peninsula University of Technology",
+    location: "Cape Town, Western Cape",
+    courses: [
+      { name: "Diploma in Information Technology", faculty: "Science", duration: "3 years", aps: 22, tags: ["tech"], requirements: ["Maths: 40%+", "English: 45%+"] },
+      { name: "Diploma in Electrical Engineering", faculty: "Engineering", duration: "3 years", aps: 22, tags: ["tech"], requirements: ["Maths: 45%+", "Physical Science: 40%+"] },
+      { name: "Diploma in Architecture", faculty: "Engineering", duration: "3 years", aps: 24, tags: ["tech", "arts"], requirements: ["Maths: 50%+", "English: 45%+"] },
+      { name: "Diploma in Business Administration", faculty: "Commerce", duration: "3 years", aps: 20, tags: ["commerce"], requirements: ["Maths Lit: 40%+", "English: 45%+"] },
+      { name: "Diploma in Graphic Design", faculty: "Arts", duration: "3 years", aps: 22, tags: ["arts"], requirements: ["English: 50%+", "Any 3 subjects: 40%+"] },
+      { name: "Diploma in Hospitality Management", faculty: "Commerce", duration: "3 years", aps: 20, tags: ["commerce"], requirements: ["English: 45%+", "Any 3 subjects: 35%+"] },
+      { name: "Diploma in Nursing", faculty: "Health", duration: "3 years", aps: 24, tags: ["health"], requirements: ["Life Science: 50%+", "Maths or Maths Lit: 40%+"] },
+    ]
+  },
+  {
+    id: "NMU",
+    name: "Nelson Mandela University",
+    location: "Gqeberha (Port Elizabeth), Eastern Cape",
+    courses: [
+      { name: "LLB Law", faculty: "Law", duration: "4 years", aps: 30, tags: ["law"], requirements: ["English: 60%+", "Any 3 subjects: 50%+"] },
+      { name: "BCom Business Management", faculty: "Commerce", duration: "3 years", aps: 28, tags: ["commerce"], requirements: ["Maths: 50%+", "English: 50%+"] },
+      { name: "BSc Computer Science", faculty: "Science", duration: "3 years", aps: 30, tags: ["tech", "science"], requirements: ["Maths: 60%+", "Physical Science: 50%+"] },
+      { name: "BEng Mechanical Engineering", faculty: "Engineering", duration: "4 years", aps: 34, tags: ["tech", "science"], requirements: ["Maths: 65%+", "Physical Science: 60%+"] },
+      { name: "BA Fine Arts", faculty: "Arts", duration: "3 years", aps: 24, tags: ["arts"], requirements: ["English: 55%+", "Any 3 subjects: 40%+"] },
+      { name: "BSc Nursing", faculty: "Health", duration: "4 years", aps: 26, tags: ["health"], requirements: ["Life Science: 55%+", "Maths: 45%+"] },
+      { name: "BEd Foundation Phase", faculty: "Education", duration: "4 years", aps: 24, tags: ["edu"], requirements: ["English: 50%+", "Any 3 subjects: 40%+"] },
+    ]
+  },
+  {
+    id: "SPU",
+    name: "Sol Plaatje University",
+    location: "Kimberley, Northern Cape",
+    courses: [
+      { name: "BA Humanities", faculty: "Arts", duration: "3 years", aps: 22, tags: ["arts"], requirements: ["English: 50%+", "Any 3 subjects: 40%+"] },
+      { name: "BCom Business Administration", faculty: "Commerce", duration: "3 years", aps: 24, tags: ["commerce"], requirements: ["Maths or Maths Lit: 45%+", "English: 45%+"] },
+      { name: "BSc Natural Sciences", faculty: "Science", duration: "3 years", aps: 24, tags: ["science"], requirements: ["Maths: 50%+", "Physical Science or Life Science: 45%+"] },
+      { name: "BEd Foundation Phase", faculty: "Education", duration: "4 years", aps: 22, tags: ["edu"], requirements: ["English: 50%+", "Any 3 subjects: 40%+"] },
+      { name: "BA Heritage Studies", faculty: "Arts", duration: "3 years", aps: 22, tags: ["arts"], requirements: ["English: 50%+", "History or any subject: 40%+"] },
+    ]
+  },
+  {
+    id: "UMP",
+    name: "University of Mpumalanga",
+    location: "Mbombela, Mpumalanga",
+    courses: [
+      { name: "BSc Agriculture", faculty: "Science", duration: "4 years", aps: 22, tags: ["science"], requirements: ["Maths or Maths Lit: 40%+", "Life Science: 40%+"] },
+      { name: "BA Education", faculty: "Education", duration: "4 years", aps: 22, tags: ["edu"], requirements: ["English: 50%+", "Any 3 subjects: 40%+"] },
+      { name: "BCom Tourism & Hospitality Management", faculty: "Commerce", duration: "3 years", aps: 22, tags: ["commerce"], requirements: ["English: 50%+", "Maths Lit: 40%+"] },
+      { name: "BA Humanities", faculty: "Arts", duration: "3 years", aps: 22, tags: ["arts"], requirements: ["English: 50%+", "Any 3 subjects: 40%+"] },
+      { name: "Diploma in Information Technology", faculty: "Science", duration: "3 years", aps: 20, tags: ["tech"], requirements: ["Maths: 40%+", "English: 40%+"] },
+    ]
+  }
+];
+
+// ─── Recommended course IDs (set from server-side when user has uploaded results) ───
+// When you integrate with your DB/AI, pass this as an EJS variable:
+// const recommendedKeys = <%- JSON.stringify(recommendedKeys || []) %>;
+const recommendedKeys = []; // e.g. ["UCT-BSc Computer Science", "UP-BCom Business Management"]
+
+// ─── RENDER ───
+const tagClassMap = { science:"tag-science", arts:"tag-arts", commerce:"tag-commerce", health:"tag-health", tech:"tag-tech", law:"tag-law", edu:"tag-edu" };
+
+function makeKey(uniId, courseName) { return `${uniId}-${courseName}`; }
+
+function renderCourses(unis) {
+    const container = document.getElementById("courseListings");
+    const emptyState = document.getElementById("emptyState");
+    let totalCourses = 0, totalUnis = 0;
+    container.innerHTML = "";
+
+    unis.forEach(uni => {
+        if (!uni.courses.length) return;
+        totalUnis++;
+        totalCourses += uni.courses.length;
+
+        const section = document.createElement("div");
+        section.className = "uni-section";
+        section.dataset.uniId = uni.id;
+
+        const initials = uni.name.split(" ").filter(w => /^[A-Z]/.test(w)).slice(0,2).map(w=>w[0]).join("");
+        section.innerHTML = `
+            <div class="uni-header">
+                <div class="uni-logo">${initials}</div>
+                <div>
+                    <div class="uni-name">${uni.name}</div>
+                    <div class="uni-location">📍 ${uni.location}</div>
+                </div>
+                <span class="uni-badge">${uni.courses.length} programme${uni.courses.length!==1?"s":""}</span>
+            </div>
+            <div class="courses-grid">${uni.courses.map(c => courseCardHTML(uni.id, c)).join("")}</div>
+        `;
+        container.appendChild(section);
+    });
+
+    document.getElementById("visibleCount").textContent = totalCourses;
+    document.getElementById("visibleUnis").textContent = totalUnis;
+    emptyState.style.display = totalCourses === 0 ? "block" : "none";
+}
+
+function courseCardHTML(uniId, c) {
+    const key = makeKey(uniId, c.name);
+    const isRec = recommendedKeys.includes(key);
+    const tagHTML = c.tags.map(t => `<span class="tag ${tagClassMap[t]||''}">${t}</span>`).join("");
+    const reqHTML = c.requirements.map(r => `<li>${r}</li>`).join("");
+    const apsBadge = c.aps > 0
+        ? `<span class="aps-badge">APS ${c.aps}+</span>`
+        : `<span class="aps-badge">Open Entry</span>`;
+
+    return `
+        <div class="course-card ${isRec?"recommended":""}" data-faculty="${c.faculty}" data-tags="${c.tags.join(",")}" data-name="${c.name.toLowerCase()}">
+            ${isRec ? '<div class="recommended-ribbon">✅ Recommended</div>' : ""}
+            <div class="course-faculty">${c.faculty}</div>
+            <div class="course-name">${c.name}</div>
+            <div class="course-duration">⏱ ${c.duration}</div>
+            <div class="course-requirements">
+                <p>Minimum Requirements</p>
+                <ul>${reqHTML}</ul>
+            </div>
+            <div class="course-tags">${tagHTML}</div>
+            <div class="card-footer">
+                ${apsBadge}
+                <a href="/courses/${encodeURIComponent(uniId)}/${encodeURIComponent(c.name)}" class="btn-details">View Details →</a>
+            </div>
+        </div>
+    `;
+}
+
+// ─── FILTERING ───
+function applyFilters() {
+    const search = document.getElementById("searchInput").value.toLowerCase();
+    const uniFilter = document.getElementById("universityFilter").value;
+    const facultyFilter = document.getElementById("facultyFilter").value;
+    const activeChip = document.querySelector(".chip.active")?.dataset.filter || "all";
+
+    const filtered = universities
+        .filter(uni => !uniFilter || uni.id === uniFilter)
+        .map(uni => ({
+            ...uni,
+            courses: uni.courses.filter(c => {
+                const matchSearch = !search ||
+                    c.name.toLowerCase().includes(search) ||
+                    c.faculty.toLowerCase().includes(search) ||
+                    uni.name.toLowerCase().includes(search);
+                const matchFaculty = !facultyFilter || c.faculty === facultyFilter;
+                const matchChip = activeChip === "all" ||
+                    (activeChip === "recommended" && recommendedKeys.includes(makeKey(uni.id, c.name))) ||
+                    (activeChip === "popular" && c.aps >= 36);
+                return matchSearch && matchFaculty && matchChip;
+            })
+        }))
+        .filter(uni => uni.courses.length > 0);
+
+    renderCourses(filtered);
+}
+
+document.getElementById("searchInput").addEventListener("input", applyFilters);
+document.getElementById("universityFilter").addEventListener("change", applyFilters);
+document.getElementById("facultyFilter").addEventListener("change", applyFilters);
+document.querySelectorAll(".chip").forEach(chip => {
+    chip.addEventListener("click", () => {
+        document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+        chip.classList.add("active");
+        applyFilters();
+    });
+});
+
+// Initial render
+renderCourses(universities);
+</script>
+</body>
+</html>
