@@ -31,13 +31,18 @@ The **Digital Career Guidance System (DCGS)** is a web-based platform designed t
    cd Digital-Career-Guidance-System
 
 2. Install dependencies:
+ ```
 npm install
+ ```
 3. Set up environment variables:
+ ```
 cp .env.example .env
+ ```
 //Fill in your own values for database, APIs, email, and cloud services.
 4.Run the application:
--npm start
-
+ ```
+npm start
+ ```
 ⚙️ Environment Setup
 This project uses environment variables to manage secrets and configuration.
 
