@@ -67,6 +67,10 @@ This project uses environment variables to manage secrets and configuration.
 This project is licensed under the MIT License — feel free to use, modify, and distribute with attribution.
 <img width="1337" height="634" alt="image" src="https://github.com/user-attachments/assets/391d8c19-4177-45fd-85d2-89514f05b4c0" />
 <img width="1350" height="639" alt="image" src="https://github.com/user-attachments/assets/03c5b27c-2616-4f69-90a3-be99202c864e" />
+<img width="1355" height="649" alt="image" src="https://github.com/user-attachments/assets/e4681924-97c9-44f2-a4e2-2008b43b1e90" />
+<img width="1359" height="633" alt="image" src="https://github.com/user-attachments/assets/cefa2099-3221-45e4-88c2-b7e64bdb545f" />
+
+
 
 
 
