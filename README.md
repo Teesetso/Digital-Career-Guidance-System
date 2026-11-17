@@ -75,6 +75,7 @@ The application is a server-rendered Node.js web application with:
 <img width="1345" height="629" alt="image" src="https://github.com/user-attachments/assets/754b05b4-1710-4e03-ab88-b3eddf4de5f1" />
 <img width="1353" height="654" alt="image" src="https://github.com/user-attachments/assets/0354ec4e-0254-4e61-8394-556ae149c825" />
 <img width="1320" height="625" alt="image" src="https://github.com/user-attachments/assets/155c9a42-f61f-49f1-9dbf-e088f8af4559" />
+<img width="1340" height="628" alt="image" src="https://github.com/user-attachments/assets/21dab286-da9b-490f-b65a-dc9c4aa4ddbd" />
 
 
 
