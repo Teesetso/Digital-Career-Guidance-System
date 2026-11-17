@@ -1,10 +1,9 @@
 # Digital Career Guidance System
-![alt text](image.png)
-![alt text](image-1.png)
+
+<img width="1351" height="636" alt="image" src="https://github.com/user-attachments/assets/282ba6ce-2fc4-4eee-8c24-81d3cc6e5d2c" />
+<img width="1344" height="576" alt="image" src="https://github.com/user-attachments/assets/b249e6ca-06c0-4407-9468-3cd1b2d383c0" />
 
 The Digital Career Guidance System (DCGS) is an AI-assisted career guidance platform for South African learners. It connects a learner's academic results, APS score, interests, assessment profile, and university/course requirements to provide practical study and career guidance.
-
-![alt text](image-2.png)
 
 
 The application is a server-rendered Node.js web application with:
@@ -71,12 +70,15 @@ The application is a server-rendered Node.js web application with:
 8. Parents can view linked learner information, while administrators manage users, questions, universities, safety flags, OCR uploads, and audit records.
 
 ## ScreenShots
-![alt text](image-3.png)
-![alt text](image-4.png)
-![alt text](image-5.png)
-![alt text](image-6.png)
-![alt text](image-7.png)
-![alt text](image-8.png)
+<img width="1341" height="654" alt="image" src="https://github.com/user-attachments/assets/c3b58c65-4fef-499c-9a92-9e4923d9010b" />
+<img width="1361" height="621" alt="image" src="https://github.com/user-attachments/assets/40a47cb7-e6b9-4092-98a6-70803a50ed2f" />
+<img width="1345" height="629" alt="image" src="https://github.com/user-attachments/assets/754b05b4-1710-4e03-ab88-b3eddf4de5f1" />
+<img width="1353" height="654" alt="image" src="https://github.com/user-attachments/assets/0354ec4e-0254-4e61-8394-556ae149c825" />
+<img width="1320" height="625" alt="image" src="https://github.com/user-attachments/assets/155c9a42-f61f-49f1-9dbf-e088f8af4559" />
+
+
+
+
 
 ## Repository structure
 
@@ -197,14 +199,17 @@ Use `.env.example` as the authoritative template. The application reads the foll
 
 The runtime admin seeder supports:
 
+
 ```text
 ADMIN_EMAIL
 ADMIN_PASSWORD
 ADMIN_ROLE
 ```
 ## Admin Dashboard Screenshots
-![alt text](image-9.png)
-![alt text](image-10.png)
+<img width="1309" height="631" alt="image" src="https://github.com/user-attachments/assets/32814b66-c001-4999-8ee9-90a6e50feb0f" />
+
+<img width="1248" height="573" alt="image" src="https://github.com/user-attachments/assets/4c7c53b3-4c1e-4d21-81db-6a2cd9829c77" />
+
 Set these explicitly in non-development environments. Do not rely on development defaults for a deployed application.
 
 ## Database setup
