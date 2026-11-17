@@ -1,6 +1,7 @@
-## Project Overview
+<img width="1339" height="677" alt="image" src="https://github.com/user-attachments/assets/549d0ecd-df83-4528-b12e-6e0f85530dd3" />## Project Overview
 
 The **Digital Career Guidance System (DCGS)** is a web-based platform designed to help students and professionals navigate their career paths with structured guidance, resources, and analytics.  
+
 
 ### 🎯 Purpose
 - Provide personalized career recommendations based on user profiles.
